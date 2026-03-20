@@ -1,0 +1,9 @@
+# Fichiers Visual Studio
+.vs/
+bin/
+obj/
+*.user
+*.suo
+
+# Ignorer le guide du projet
+guide_et_taches.txt
