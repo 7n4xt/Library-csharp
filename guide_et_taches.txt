@@ -1,0 +1,63 @@
+======================================================
+  GUIDE DE DEMARRAGE : APPLICATION DE BIBLIOTHEQUE
+======================================================
+
+Bienvenue dans le guide de démarrage pour le projet de gestion de bibliothèque en C# !
+
+--- STRUCTURE DU PROJET ---
+Le dossier actuel contient une structure de base vide pour t'aider à t'organiser :
+- Models/ : Contient les classes représentant tes données (Livre, Emprunt).
+- Views/ : Contient les formulaires (Windows Forms) de l'interface graphique.
+- Database/ : Contient les classes gérant la connexion et les requêtes MySQL.
+- Services/ : (Optionnel) Contient la logique métier si nécessaire.
+- Resources/Covers/ : Dossier prévu pour stocker les images de couverture (Bonus).
+
+--- COMMENT COMMENCER ? ---
+
+ÉTAPE 1 : Base de données MySQL
+1. Crée la base de données (ex: "library_db") via PhpMyAdmin ou en SQL.
+2. Crée la table "Books" (Id, Titre, Auteur, ISBN, Annee, Genre, Rayon, Etagere, Dispo).
+3. Ajoute le package NuGet "MySql.Data" à ton projet C# pour permettre la connexion.
+4. Dans "App.config", configure ta chaîne de connexion (Connection string).
+
+ÉTAPE 2 : Modèles (Models)
+1. Dans "Models/Book.cs", ajoute les propriétés correspondant aux colonnes de ta table "Books".
+
+ÉTAPE 3 : Accès aux données (Database)
+1. Dans "Database/DbConnection.cs", écris une méthode pour obtenir et ouvrir la connexion MySQL.
+2. Dans "Database/BookRepository.cs", implémente les fonctions CRUD :
+   - GetAll()
+   - Search(keyword)
+   - Add(Book)
+   - Update(Book)
+   - Delete(id)
+
+ÉTAPE 4 : Interface (Views)
+1. Ouvre "Views/MainForm.cs" dans le designer (quand tu créeras le vrai projet WinForms).
+   - Ajoute le DataGridView.
+   - Au chargement du formulaire (Form_Load), appelle `BookRepository.GetAll()` et lie le résultat au DataGridView.
+2. Ajoute les TextBox, ComboBox et le bouton de recherche.
+   - Sur le clic du bouton "Rechercher", appelle `BookRepository.Search()` avec le texte saisi.
+3. Crée le formulaire "Views/AddEditBookForm.cs" pour ajouter ou modifier un livre.
+
+ÉTAPE 5 : Bonus (Emprunts & Couvertures)
+1. Crée une table SQL "Borrowings".
+2. Dans l'interface d'ajout de livre, mets un bouton de type bouton d'upload ("Parcourir...") pour une PictureBox et enregistre l'image dans le dossier "Resources/Covers" et son chemin dans la DB.
+
+
+--- TÂCHES A FAIRE (CHECKLIST) ---
+[ ] Installer MySQL et configurer le serveur (wamp/xampp ou standalone).
+[ ] Créer la BDD "library_db" et les tables "Books" (et "Borrowings" si bonus).
+[ ] Initialiser un vrai projet C# WinForms (remplacer les fichiers vides actuels par les vrais).
+[ ] Ajouter la dépendance NuGet MySql.Data.
+[ ] Définir la classe Livre (Models/Book.cs).
+[ ] Implémenter la classe de connexion à la Base de Données (Database/DbConnection.cs).
+[ ] Implémenter les méthodes CRUD pour les Livres (Database/BookRepository.cs).
+[ ] Coder l'affichage de la liste des livres dans le DataGridView de la fenêtre principale.
+[ ] Coder la fonctionnalité de Recherche par Titre/Auteur/Genre/ISBN.
+[ ] Créer et coder la fenêtre d'Ajout d'un nouveau livre (avec contrôles d'erreurs).
+[ ] Coder la modification (Double-clic dans la grille pour ouvrir les détails).
+[ ] Coder la suppression (Bouton supprimer + MessageBox de confirmation).
+[ ] (Bonus) Gérer l'emprunt (Changer la disponibilité).
+[ ] (Bonus) Ajouter la gestion Upload/Affichage de couverture.
+[ ] Tester l'ensemble de l'application (validation des champs vides).
