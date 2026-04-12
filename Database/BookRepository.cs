@@ -109,20 +109,33 @@ WHERE Id = @Id;";
 
 	private static Book MapBook(MySqlDataReader reader)
 	{
+		int idOrdinal = reader.GetOrdinal("Id");
+		int titreOrdinal = reader.GetOrdinal("Titre");
+		int auteurOrdinal = reader.GetOrdinal("Auteur");
+		int isbnOrdinal = reader.GetOrdinal("ISBN");
+		int anneeOrdinal = reader.GetOrdinal("Annee");
+		int genreOrdinal = reader.GetOrdinal("Genre");
+		int rayonOrdinal = reader.GetOrdinal("Rayon");
+		int etagereOrdinal = reader.GetOrdinal("Etagere");
+		int dispoOrdinal = reader.GetOrdinal("Dispo");
+		int coverPathOrdinal = reader.GetOrdinal("CoverPath");
+		int createdAtOrdinal = reader.GetOrdinal("CreatedAt");
+		int updatedAtOrdinal = reader.GetOrdinal("UpdatedAt");
+
 		return new Book
 		{
-			Id = reader.GetInt32("Id"),
-			Titre = reader.GetString("Titre"),
-			Auteur = reader.GetString("Auteur"),
-			ISBN = reader.GetString("ISBN"),
-			Annee = reader.IsDBNull("Annee") ? null : reader.GetInt32("Annee"),
-			Genre = reader.IsDBNull("Genre") ? null : reader.GetString("Genre"),
-			Rayon = reader.IsDBNull("Rayon") ? null : reader.GetString("Rayon"),
-			Etagere = reader.IsDBNull("Etagere") ? null : reader.GetString("Etagere"),
-			Dispo = reader.GetBoolean("Dispo"),
-			CoverPath = reader.IsDBNull("CoverPath") ? null : reader.GetString("CoverPath"),
-			CreatedAt = reader.GetDateTime("CreatedAt"),
-			UpdatedAt = reader.GetDateTime("UpdatedAt")
+			Id = reader.GetInt32(idOrdinal),
+			Titre = reader.GetString(titreOrdinal),
+			Auteur = reader.GetString(auteurOrdinal),
+			ISBN = reader.GetString(isbnOrdinal),
+			Annee = reader.IsDBNull(anneeOrdinal) ? null : reader.GetInt32(anneeOrdinal),
+			Genre = reader.IsDBNull(genreOrdinal) ? null : reader.GetString(genreOrdinal),
+			Rayon = reader.IsDBNull(rayonOrdinal) ? null : reader.GetString(rayonOrdinal),
+			Etagere = reader.IsDBNull(etagereOrdinal) ? null : reader.GetString(etagereOrdinal),
+			Dispo = reader.GetBoolean(dispoOrdinal),
+			CoverPath = reader.IsDBNull(coverPathOrdinal) ? null : reader.GetString(coverPathOrdinal),
+			CreatedAt = reader.GetDateTime(createdAtOrdinal),
+			UpdatedAt = reader.GetDateTime(updatedAtOrdinal)
 		};
 	}
 
