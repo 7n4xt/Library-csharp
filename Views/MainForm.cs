@@ -49,6 +49,43 @@ public partial class MainForm : Form
 		}
 	}
 
+	private void booksGrid_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
+	{
+		if (e.RowIndex < 0)
+		{
+			return;
+		}
+
+		if (booksGrid.Rows[e.RowIndex].DataBoundItem is not Book selectedBook)
+		{
+			return;
+		}
+
+		using var editForm = new AddEditBookForm(selectedBook);
+		if (editForm.ShowDialog(this) != DialogResult.OK)
+		{
+			return;
+		}
+
+		try
+		{
+			bool updated = bookRepository.Update(editForm.BookData);
+			LoadBooks(searchTextBox.Text);
+			statusLabel.Text = updated
+				? $"Book #{editForm.BookData.Id} updated"
+				: $"No changes saved for book #{editForm.BookData.Id}";
+		}
+		catch (Exception ex)
+		{
+			MessageBox.Show(
+				this,
+				$"The book could not be updated.\n\n{ex.Message}",
+				"Library Management",
+				MessageBoxButtons.OK,
+				MessageBoxIcon.Error);
+		}
+	}
+
 	private void searchTextBox_KeyDown(object? sender, KeyEventArgs e)
 	{
 		if (e.KeyCode != Keys.Enter)

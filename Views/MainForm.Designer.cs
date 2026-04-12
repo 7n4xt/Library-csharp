@@ -105,6 +105,7 @@ partial class MainForm
 		booksGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 		booksGrid.Size = new Size(1100, 595);
 		booksGrid.TabIndex = 1;
+		booksGrid.CellDoubleClick += booksGrid_CellDoubleClick;
 		// 
 		// statusLabel
 		// 
