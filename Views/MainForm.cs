@@ -40,12 +40,7 @@ public partial class MainForm : Form
 		}
 		catch (Exception ex)
 		{
-			MessageBox.Show(
-				this,
-				$"The book could not be added.\n\n{ex.Message}",
-				"Library Management",
-				MessageBoxButtons.OK,
-				MessageBoxIcon.Error);
+			ShowOperationError("add the book", ex);
 		}
 	}
 
@@ -85,12 +80,7 @@ public partial class MainForm : Form
 		}
 		catch (Exception ex)
 		{
-			MessageBox.Show(
-				this,
-				$"The book could not be deleted.\n\n{ex.Message}",
-				"Library Management",
-				MessageBoxButtons.OK,
-				MessageBoxIcon.Error);
+			ShowOperationError("delete the book", ex);
 		}
 	}
 
@@ -122,12 +112,7 @@ public partial class MainForm : Form
 		}
 		catch (Exception ex)
 		{
-			MessageBox.Show(
-				this,
-				$"The book could not be updated.\n\n{ex.Message}",
-				"Library Management",
-				MessageBoxButtons.OK,
-				MessageBoxIcon.Error);
+			ShowOperationError("update the book", ex);
 		}
 	}
 
@@ -159,12 +144,17 @@ public partial class MainForm : Form
 		catch (Exception ex)
 		{
 			statusLabel.Text = "Unable to load books";
-			MessageBox.Show(
-				this,
-				$"The book list could not be loaded.\n\n{ex.Message}",
-				"Library Management",
-				MessageBoxButtons.OK,
-				MessageBoxIcon.Error);
+			ShowOperationError("load the book list", ex);
 		}
+	}
+
+	private void ShowOperationError(string action, Exception ex)
+	{
+		MessageBox.Show(
+			this,
+			$"Sorry, we could not {action}. Please check your database connection and try again.\n\nDetails: {ex.Message}",
+			"Library Management",
+			MessageBoxButtons.OK,
+			MessageBoxIcon.Error);
 	}
 }

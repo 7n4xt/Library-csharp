@@ -1,10 +1,12 @@
 using LibraryManagement.Models;
+using LibraryManagement.Services;
 
 namespace LibraryManagement.Views;
 
 public partial class AddEditBookForm : Form
 {
 	private readonly bool isEditMode;
+	private readonly LibraryService libraryService = new();
 
 	public AddEditBookForm()
 	{
@@ -27,6 +29,7 @@ public partial class AddEditBookForm : Form
 		Text = isEditMode ? "Edit Book" : "Add Book";
 		AcceptButton = saveButton;
 		CancelButton = cancelButton;
+		ClearValidationErrors();
 	}
 
 	private void LoadBook(Book book)
@@ -69,7 +72,7 @@ public partial class AddEditBookForm : Form
 			Id = BookData.Id,
 			Titre = titleTextBox.Text.Trim(),
 			Auteur = authorTextBox.Text.Trim(),
-			ISBN = isbnTextBox.Text.Trim(),
+			ISBN = LibraryService.CompactIsbn(isbnTextBox.Text),
 			Annee = yearCheckBox.Checked ? (int?)yearNumericUpDown.Value : null,
 			Genre = string.IsNullOrWhiteSpace(genreTextBox.Text) ? null : genreTextBox.Text.Trim(),
 			Rayon = string.IsNullOrWhiteSpace(rayonTextBox.Text) ? null : rayonTextBox.Text.Trim(),
@@ -84,38 +87,69 @@ public partial class AddEditBookForm : Form
 
 	private bool ValidateFormInputs()
 	{
-		bool isValid = true;
+		ValidationResult validation = libraryService.ValidateBookInput(
+			titleTextBox.Text,
+			authorTextBox.Text,
+			isbnTextBox.Text,
+			yearCheckBox.Checked,
+			yearCheckBox.Checked ? (int?)yearNumericUpDown.Value : null);
 
-		isValid &= ValidateRequiredField(titleTextBox, titleErrorLabel, "Title is required.");
-		isValid &= ValidateRequiredField(authorTextBox, authorErrorLabel, "Author is required.");
-		isValid &= ValidateRequiredField(isbnTextBox, isbnErrorLabel, "ISBN is required.");
+		ApplyValidationErrors(validation);
 
-		if (yearCheckBox.Checked && (yearNumericUpDown.Value < 1000 || yearNumericUpDown.Value > 3000))
+		if (validation.IsValid)
 		{
-			yearErrorLabel.Text = "Enter a valid year.";
-			yearErrorLabel.Visible = true;
-			isValid = false;
-		}
-		else
-		{
-			yearErrorLabel.Text = string.Empty;
-			yearErrorLabel.Visible = false;
-		}
-
-		return isValid;
-	}
-
-	private static bool ValidateRequiredField(TextBox textBox, Label errorLabel, string message)
-	{
-		if (!string.IsNullOrWhiteSpace(textBox.Text))
-		{
-			errorLabel.Text = string.Empty;
-			errorLabel.Visible = false;
 			return true;
 		}
 
-		errorLabel.Text = message;
-		errorLabel.Visible = true;
+		if (validation.Errors.ContainsKey("Title"))
+		{
+			titleTextBox.Focus();
+		}
+		else if (validation.Errors.ContainsKey("Author"))
+		{
+			authorTextBox.Focus();
+		}
+		else if (validation.Errors.ContainsKey("ISBN"))
+		{
+			isbnTextBox.Focus();
+		}
+		else if (validation.Errors.ContainsKey("Year"))
+		{
+			yearNumericUpDown.Focus();
+		}
+
 		return false;
+	}
+
+	private void ApplyValidationErrors(ValidationResult validation)
+	{
+		titleErrorLabel.Text = GetError(validation, "Title");
+		titleErrorLabel.Visible = !string.IsNullOrEmpty(titleErrorLabel.Text);
+
+		authorErrorLabel.Text = GetError(validation, "Author");
+		authorErrorLabel.Visible = !string.IsNullOrEmpty(authorErrorLabel.Text);
+
+		isbnErrorLabel.Text = GetError(validation, "ISBN");
+		isbnErrorLabel.Visible = !string.IsNullOrEmpty(isbnErrorLabel.Text);
+
+		yearErrorLabel.Text = GetError(validation, "Year");
+		yearErrorLabel.Visible = !string.IsNullOrEmpty(yearErrorLabel.Text);
+	}
+
+	private void ClearValidationErrors()
+	{
+		titleErrorLabel.Text = string.Empty;
+		titleErrorLabel.Visible = false;
+		authorErrorLabel.Text = string.Empty;
+		authorErrorLabel.Visible = false;
+		isbnErrorLabel.Text = string.Empty;
+		isbnErrorLabel.Visible = false;
+		yearErrorLabel.Text = string.Empty;
+		yearErrorLabel.Visible = false;
+	}
+
+	private static string GetError(ValidationResult validation, string key)
+	{
+		return validation.Errors.TryGetValue(key, out string? message) ? message : string.Empty;
 	}
 }
