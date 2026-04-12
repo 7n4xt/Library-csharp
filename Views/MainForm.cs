@@ -24,6 +24,31 @@ public partial class MainForm : Form
 		LoadBooks(searchTextBox.Text);
 	}
 
+	private void addButton_Click(object? sender, EventArgs e)
+	{
+		using var addForm = new AddEditBookForm();
+		if (addForm.ShowDialog(this) != DialogResult.OK)
+		{
+			return;
+		}
+
+		try
+		{
+			int newId = bookRepository.Add(addForm.BookData);
+			LoadBooks(searchTextBox.Text);
+			statusLabel.Text = $"Book #{newId} added";
+		}
+		catch (Exception ex)
+		{
+			MessageBox.Show(
+				this,
+				$"The book could not be added.\n\n{ex.Message}",
+				"Library Management",
+				MessageBoxButtons.OK,
+				MessageBoxIcon.Error);
+		}
+	}
+
 	private void searchTextBox_KeyDown(object? sender, KeyEventArgs e)
 	{
 		if (e.KeyCode != Keys.Enter)

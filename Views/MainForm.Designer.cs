@@ -7,6 +7,7 @@ partial class MainForm
 	private Label searchLabel = null!;
 	private TextBox searchTextBox = null!;
 	private Button searchButton = null!;
+	private Button addButton = null!;
 	private DataGridView booksGrid = null!;
 	private Label statusLabel = null!;
 
@@ -26,6 +27,7 @@ partial class MainForm
 		searchLabel = new Label();
 		searchTextBox = new TextBox();
 		searchButton = new Button();
+		addButton = new Button();
 		booksGrid = new DataGridView();
 		statusLabel = new Label();
 		searchPanel.SuspendLayout();
@@ -34,6 +36,7 @@ partial class MainForm
 		// 
 		// searchPanel
 		// 
+		searchPanel.Controls.Add(addButton);
 		searchPanel.Controls.Add(searchButton);
 		searchPanel.Controls.Add(searchTextBox);
 		searchPanel.Controls.Add(searchLabel);
@@ -59,7 +62,7 @@ partial class MainForm
 		searchTextBox.Location = new Point(72, 14);
 		searchTextBox.Name = "searchTextBox";
 		searchTextBox.PlaceholderText = "Titre, auteur, genre, ISBN";
-		searchTextBox.Size = new Size(857, 23);
+		searchTextBox.Size = new Size(790, 23);
 		searchTextBox.TabIndex = 1;
 		searchTextBox.KeyDown += searchTextBox_KeyDown;
 		// 
@@ -68,11 +71,22 @@ partial class MainForm
 		searchButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
 		searchButton.Location = new Point(947, 13);
 		searchButton.Name = "searchButton";
-		searchButton.Size = new Size(141, 25);
+		searchButton.Size = new Size(70, 25);
 		searchButton.TabIndex = 2;
 		searchButton.Text = "Search";
 		searchButton.UseVisualStyleBackColor = true;
 		searchButton.Click += searchButton_Click;
+		// 
+		// addButton
+		// 
+		addButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+		addButton.Location = new Point(1023, 13);
+		addButton.Name = "addButton";
+		addButton.Size = new Size(65, 25);
+		addButton.TabIndex = 3;
+		addButton.Text = "Add";
+		addButton.UseVisualStyleBackColor = true;
+		addButton.Click += addButton_Click;
 		// 
 		// booksGrid
 		// 
