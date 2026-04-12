@@ -8,6 +8,7 @@ partial class MainForm
 	private TextBox searchTextBox = null!;
 	private Button searchButton = null!;
 	private Button addButton = null!;
+	private Button deleteButton = null!;
 	private DataGridView booksGrid = null!;
 	private Label statusLabel = null!;
 
@@ -28,6 +29,7 @@ partial class MainForm
 		searchTextBox = new TextBox();
 		searchButton = new Button();
 		addButton = new Button();
+		deleteButton = new Button();
 		booksGrid = new DataGridView();
 		statusLabel = new Label();
 		searchPanel.SuspendLayout();
@@ -36,6 +38,7 @@ partial class MainForm
 		// 
 		// searchPanel
 		// 
+		searchPanel.Controls.Add(deleteButton);
 		searchPanel.Controls.Add(addButton);
 		searchPanel.Controls.Add(searchButton);
 		searchPanel.Controls.Add(searchTextBox);
@@ -62,14 +65,14 @@ partial class MainForm
 		searchTextBox.Location = new Point(72, 14);
 		searchTextBox.Name = "searchTextBox";
 		searchTextBox.PlaceholderText = "Titre, auteur, genre, ISBN";
-		searchTextBox.Size = new Size(790, 23);
+		searchTextBox.Size = new Size(718, 23);
 		searchTextBox.TabIndex = 1;
 		searchTextBox.KeyDown += searchTextBox_KeyDown;
 		// 
 		// searchButton
 		// 
 		searchButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-		searchButton.Location = new Point(947, 13);
+		searchButton.Location = new Point(875, 13);
 		searchButton.Name = "searchButton";
 		searchButton.Size = new Size(70, 25);
 		searchButton.TabIndex = 2;
@@ -80,13 +83,24 @@ partial class MainForm
 		// addButton
 		// 
 		addButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-		addButton.Location = new Point(1023, 13);
+		addButton.Location = new Point(951, 13);
 		addButton.Name = "addButton";
 		addButton.Size = new Size(65, 25);
 		addButton.TabIndex = 3;
 		addButton.Text = "Add";
 		addButton.UseVisualStyleBackColor = true;
 		addButton.Click += addButton_Click;
+		// 
+		// deleteButton
+		// 
+		deleteButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+		deleteButton.Location = new Point(1022, 13);
+		deleteButton.Name = "deleteButton";
+		deleteButton.Size = new Size(66, 25);
+		deleteButton.TabIndex = 4;
+		deleteButton.Text = "Delete";
+		deleteButton.UseVisualStyleBackColor = true;
+		deleteButton.Click += deleteButton_Click;
 		// 
 		// booksGrid
 		// 

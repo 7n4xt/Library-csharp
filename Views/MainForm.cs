@@ -49,6 +49,51 @@ public partial class MainForm : Form
 		}
 	}
 
+	private void deleteButton_Click(object? sender, EventArgs e)
+	{
+		if (booksGrid.CurrentRow?.DataBoundItem is not Book selectedBook)
+		{
+			MessageBox.Show(
+				this,
+				"Select a book first.",
+				"Library Management",
+				MessageBoxButtons.OK,
+				MessageBoxIcon.Information);
+			return;
+		}
+
+		DialogResult confirmResult = MessageBox.Show(
+			this,
+			$"Delete \"{selectedBook.Titre}\" by {selectedBook.Auteur}?",
+			"Confirm Delete",
+			MessageBoxButtons.YesNo,
+			MessageBoxIcon.Warning,
+			MessageBoxDefaultButton.Button2);
+
+		if (confirmResult != DialogResult.Yes)
+		{
+			return;
+		}
+
+		try
+		{
+			bool deleted = bookRepository.Delete(selectedBook.Id);
+			LoadBooks(searchTextBox.Text);
+			statusLabel.Text = deleted
+				? $"Book #{selectedBook.Id} deleted"
+				: $"Book #{selectedBook.Id} was not deleted";
+		}
+		catch (Exception ex)
+		{
+			MessageBox.Show(
+				this,
+				$"The book could not be deleted.\n\n{ex.Message}",
+				"Library Management",
+				MessageBoxButtons.OK,
+				MessageBoxIcon.Error);
+		}
+	}
+
 	private void booksGrid_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
 	{
 		if (e.RowIndex < 0)
