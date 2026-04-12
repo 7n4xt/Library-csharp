@@ -19,13 +19,35 @@ public partial class MainForm : Form
 		LoadBooks();
 	}
 
-	private void LoadBooks()
+	private void searchButton_Click(object? sender, EventArgs e)
+	{
+		LoadBooks(searchTextBox.Text);
+	}
+
+	private void searchTextBox_KeyDown(object? sender, KeyEventArgs e)
+	{
+		if (e.KeyCode != Keys.Enter)
+		{
+			return;
+		}
+
+		e.SuppressKeyPress = true;
+		LoadBooks(searchTextBox.Text);
+	}
+
+	private void LoadBooks(string? keyword = null)
 	{
 		try
 		{
-			List<Book> books = bookRepository.GetAll();
+			string normalizedKeyword = keyword?.Trim() ?? string.Empty;
+			List<Book> books = string.IsNullOrWhiteSpace(normalizedKeyword)
+				? bookRepository.GetAll()
+				: bookRepository.Search(normalizedKeyword);
+
 			booksGrid.DataSource = new BindingList<Book>(books);
-			statusLabel.Text = $"{books.Count} books loaded";
+			statusLabel.Text = string.IsNullOrWhiteSpace(normalizedKeyword)
+				? $"{books.Count} books loaded"
+				: $"{books.Count} books found for \"{normalizedKeyword}\"";
 		}
 		catch (Exception ex)
 		{
