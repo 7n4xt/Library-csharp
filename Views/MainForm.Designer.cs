@@ -7,6 +7,8 @@ partial class MainForm
 	private Label searchLabel = null!;
 	private TextBox searchTextBox = null!;
 	private Button searchButton = null!;
+	private Button borrowButton = null!;
+	private Button returnButton = null!;
 	private Button addButton = null!;
 	private Button deleteButton = null!;
 	private DataGridView booksGrid = null!;
@@ -28,6 +30,8 @@ partial class MainForm
 		searchLabel = new Label();
 		searchTextBox = new TextBox();
 		searchButton = new Button();
+		borrowButton = new Button();
+		returnButton = new Button();
 		addButton = new Button();
 		deleteButton = new Button();
 		booksGrid = new DataGridView();
@@ -40,6 +44,8 @@ partial class MainForm
 		// 
 		searchPanel.Controls.Add(deleteButton);
 		searchPanel.Controls.Add(addButton);
+		searchPanel.Controls.Add(returnButton);
+		searchPanel.Controls.Add(borrowButton);
 		searchPanel.Controls.Add(searchButton);
 		searchPanel.Controls.Add(searchTextBox);
 		searchPanel.Controls.Add(searchLabel);
@@ -65,28 +71,50 @@ partial class MainForm
 		searchTextBox.Location = new Point(72, 14);
 		searchTextBox.Name = "searchTextBox";
 		searchTextBox.PlaceholderText = "Titre, auteur, genre, ISBN";
-		searchTextBox.Size = new Size(718, 23);
+		searchTextBox.Size = new Size(674, 23);
 		searchTextBox.TabIndex = 1;
 		searchTextBox.KeyDown += searchTextBox_KeyDown;
 		// 
 		// searchButton
 		// 
 		searchButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-		searchButton.Location = new Point(875, 13);
+		searchButton.Location = new Point(752, 13);
 		searchButton.Name = "searchButton";
-		searchButton.Size = new Size(70, 25);
+		searchButton.Size = new Size(60, 25);
 		searchButton.TabIndex = 2;
 		searchButton.Text = "Search";
 		searchButton.UseVisualStyleBackColor = true;
 		searchButton.Click += searchButton_Click;
 		// 
+		// borrowButton
+		// 
+		borrowButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+		borrowButton.Location = new Point(818, 13);
+		borrowButton.Name = "borrowButton";
+		borrowButton.Size = new Size(60, 25);
+		borrowButton.TabIndex = 3;
+		borrowButton.Text = "Borrow";
+		borrowButton.UseVisualStyleBackColor = true;
+		borrowButton.Click += borrowButton_Click;
+		// 
+		// returnButton
+		// 
+		returnButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+		returnButton.Location = new Point(884, 13);
+		returnButton.Name = "returnButton";
+		returnButton.Size = new Size(60, 25);
+		returnButton.TabIndex = 4;
+		returnButton.Text = "Return";
+		returnButton.UseVisualStyleBackColor = true;
+		returnButton.Click += returnButton_Click;
+		// 
 		// addButton
 		// 
 		addButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-		addButton.Location = new Point(951, 13);
+		addButton.Location = new Point(950, 13);
 		addButton.Name = "addButton";
-		addButton.Size = new Size(65, 25);
-		addButton.TabIndex = 3;
+		addButton.Size = new Size(60, 25);
+		addButton.TabIndex = 5;
 		addButton.Text = "Add";
 		addButton.UseVisualStyleBackColor = true;
 		addButton.Click += addButton_Click;
@@ -94,10 +122,10 @@ partial class MainForm
 		// deleteButton
 		// 
 		deleteButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-		deleteButton.Location = new Point(1022, 13);
+		deleteButton.Location = new Point(1016, 13);
 		deleteButton.Name = "deleteButton";
-		deleteButton.Size = new Size(66, 25);
-		deleteButton.TabIndex = 4;
+		deleteButton.Size = new Size(72, 25);
+		deleteButton.TabIndex = 6;
 		deleteButton.Text = "Delete";
 		deleteButton.UseVisualStyleBackColor = true;
 		deleteButton.Click += deleteButton_Click;

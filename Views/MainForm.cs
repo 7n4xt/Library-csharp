@@ -8,6 +8,7 @@ namespace LibraryManagement.Views;
 public partial class MainForm : Form
 {
 	private readonly BookRepository bookRepository = new();
+	private readonly BorrowingRepository borrowingRepository = new();
 
 	public MainForm()
 	{
@@ -47,14 +48,8 @@ public partial class MainForm : Form
 
 	private void deleteButton_Click(object? sender, EventArgs e)
 	{
-		if (booksGrid.CurrentRow?.DataBoundItem is not Book selectedBook)
+		if (TryGetSelectedBook(out Book? selectedBook) == false)
 		{
-			MessageBox.Show(
-				this,
-				"Select a book first.",
-				"Library Management",
-				MessageBoxButtons.OK,
-				MessageBoxIcon.Information);
 			return;
 		}
 
@@ -82,6 +77,96 @@ public partial class MainForm : Form
 		catch (Exception ex)
 		{
 			ShowOperationError("delete the book", ex);
+		}
+	}
+
+	private void borrowButton_Click(object? sender, EventArgs e)
+	{
+		if (TryGetSelectedBook(out Book? selectedBook) == false)
+		{
+			return;
+		}
+
+		if (!selectedBook!.Dispo)
+		{
+			MessageBox.Show(
+				this,
+				"This book is already borrowed.",
+				"Library Management",
+				MessageBoxButtons.OK,
+				MessageBoxIcon.Information);
+			return;
+		}
+
+		DialogResult confirm = MessageBox.Show(
+			this,
+			$"Mark \"{selectedBook.Titre}\" as borrowed by {Environment.UserName}?",
+			"Confirm Borrow",
+			MessageBoxButtons.YesNo,
+			MessageBoxIcon.Question,
+			MessageBoxDefaultButton.Button2);
+
+		if (confirm != DialogResult.Yes)
+		{
+			return;
+		}
+
+		try
+		{
+			bool borrowed = borrowingRepository.Borrow(selectedBook.Id, Environment.UserName, DateTime.Now.AddDays(14));
+			LoadBooks(searchTextBox.Text);
+			statusLabel.Text = borrowed
+				? $"Book #{selectedBook.Id} borrowed"
+				: "Borrowing was not saved";
+		}
+		catch (Exception ex)
+		{
+			ShowOperationError("borrow the book", ex);
+		}
+	}
+
+	private void returnButton_Click(object? sender, EventArgs e)
+	{
+		if (TryGetSelectedBook(out Book? selectedBook) == false)
+		{
+			return;
+		}
+
+		if (selectedBook!.Dispo)
+		{
+			MessageBox.Show(
+				this,
+				"This book is already available.",
+				"Library Management",
+				MessageBoxButtons.OK,
+				MessageBoxIcon.Information);
+			return;
+		}
+
+		DialogResult confirm = MessageBox.Show(
+			this,
+			$"Mark \"{selectedBook.Titre}\" as returned?",
+			"Confirm Return",
+			MessageBoxButtons.YesNo,
+			MessageBoxIcon.Question,
+			MessageBoxDefaultButton.Button2);
+
+		if (confirm != DialogResult.Yes)
+		{
+			return;
+		}
+
+		try
+		{
+			bool returned = borrowingRepository.Return(selectedBook.Id);
+			LoadBooks(searchTextBox.Text);
+			statusLabel.Text = returned
+				? $"Book #{selectedBook.Id} returned"
+				: "No active borrowing found";
+		}
+		catch (Exception ex)
+		{
+			ShowOperationError("return the book", ex);
 		}
 	}
 
@@ -180,5 +265,23 @@ public partial class MainForm : Form
 
 		string details = ex.InnerException?.Message ?? ex.Message;
 		return $"Sorry, we could not {action}. {details}";
+	}
+
+	private bool TryGetSelectedBook(out Book? selectedBook)
+	{
+		selectedBook = booksGrid.CurrentRow?.DataBoundItem as Book;
+		if (selectedBook != null)
+		{
+			return true;
+		}
+
+		MessageBox.Show(
+			this,
+			"Select a book first.",
+			"Library Management",
+			MessageBoxButtons.OK,
+			MessageBoxIcon.Information);
+
+		return false;
 	}
 }
