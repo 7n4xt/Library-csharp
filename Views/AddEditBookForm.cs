@@ -92,7 +92,11 @@ public partial class AddEditBookForm : Form
 			authorTextBox.Text,
 			isbnTextBox.Text,
 			yearCheckBox.Checked,
-			yearCheckBox.Checked ? (int?)yearNumericUpDown.Value : null);
+			yearCheckBox.Checked ? (int?)yearNumericUpDown.Value : null,
+			genreTextBox.Text,
+			rayonTextBox.Text,
+			etagereTextBox.Text,
+			coverPathTextBox.Text);
 
 		ApplyValidationErrors(validation);
 
@@ -117,6 +121,29 @@ public partial class AddEditBookForm : Form
 		{
 			yearNumericUpDown.Focus();
 		}
+		else if (validation.Errors.ContainsKey("Genre"))
+		{
+			genreTextBox.Focus();
+		}
+		else if (validation.Errors.ContainsKey("Rayon"))
+		{
+			rayonTextBox.Focus();
+		}
+		else if (validation.Errors.ContainsKey("Etagere"))
+		{
+			etagereTextBox.Focus();
+		}
+		else if (validation.Errors.ContainsKey("CoverPath"))
+		{
+			coverPathTextBox.Focus();
+		}
+
+		MessageBox.Show(
+			this,
+			"Please correct the invalid fields and try again.",
+			"Validation",
+			MessageBoxButtons.OK,
+			MessageBoxIcon.Warning);
 
 		return false;
 	}

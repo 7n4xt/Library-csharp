@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using LibraryManagement.Database;
 using LibraryManagement.Models;
+using MySql.Data.MySqlClient;
 
 namespace LibraryManagement.Views;
 
@@ -150,11 +151,34 @@ public partial class MainForm : Form
 
 	private void ShowOperationError(string action, Exception ex)
 	{
+		string userMessage = BuildFriendlyErrorMessage(action, ex);
+
 		MessageBox.Show(
 			this,
-			$"Sorry, we could not {action}. Please check your database connection and try again.\n\nDetails: {ex.Message}",
+			userMessage,
 			"Library Management",
 			MessageBoxButtons.OK,
 			MessageBoxIcon.Error);
+	}
+
+	private static string BuildFriendlyErrorMessage(string action, Exception ex)
+	{
+		if (ex is MySqlException mySqlEx)
+		{
+			if (mySqlEx.Number == 1062)
+			{
+				return "This ISBN already exists. Please use a different ISBN and try again.";
+			}
+
+			if (mySqlEx.Number == 1042 || mySqlEx.Number == 0)
+			{
+				return $"Sorry, we could not {action} because the database is unreachable. Check your connection settings and try again.";
+			}
+
+			return $"Sorry, we could not {action}. Database error: {mySqlEx.Message}";
+		}
+
+		string details = ex.InnerException?.Message ?? ex.Message;
+		return $"Sorry, we could not {action}. {details}";
 	}
 }
