@@ -157,7 +157,6 @@ partial class AddEditBookForm
 		// 
 		titleErrorLabel.AutoSize = true;
 		titleErrorLabel.Dock = DockStyle.Fill;
-		titleErrorLabel.ForeColor = Color.Firebrick;
 		titleErrorLabel.Location = new Point(123, 34);
 		titleErrorLabel.Name = "titleErrorLabel";
 		titleErrorLabel.Size = new Size(485, 20);
@@ -186,7 +185,6 @@ partial class AddEditBookForm
 		// 
 		authorErrorLabel.AutoSize = true;
 		authorErrorLabel.Dock = DockStyle.Fill;
-		authorErrorLabel.ForeColor = Color.Firebrick;
 		authorErrorLabel.Location = new Point(123, 82);
 		authorErrorLabel.Name = "authorErrorLabel";
 		authorErrorLabel.Size = new Size(485, 20);
@@ -215,7 +213,6 @@ partial class AddEditBookForm
 		// 
 		isbnErrorLabel.AutoSize = true;
 		isbnErrorLabel.Dock = DockStyle.Fill;
-		isbnErrorLabel.ForeColor = Color.Firebrick;
 		isbnErrorLabel.Location = new Point(123, 130);
 		isbnErrorLabel.Name = "isbnErrorLabel";
 		isbnErrorLabel.Size = new Size(485, 20);
@@ -268,7 +265,6 @@ partial class AddEditBookForm
 		// 
 		yearErrorLabel.AutoSize = true;
 		yearErrorLabel.Dock = DockStyle.Fill;
-		yearErrorLabel.ForeColor = Color.Firebrick;
 		yearErrorLabel.Location = new Point(123, 178);
 		yearErrorLabel.Name = "yearErrorLabel";
 		yearErrorLabel.Size = new Size(485, 20);
@@ -433,10 +429,8 @@ partial class AddEditBookForm
 		// 
 		AutoScaleDimensions = new SizeF(7F, 15F);
 		AutoScaleMode = AutoScaleMode.Font;
-		BackColor = SystemColors.Control;
 		ClientSize = new Size(620, 524);
 		Controls.Add(mainLayout);
-		Font = new Font("Segoe UI", 9F);
 		FormBorderStyle = FormBorderStyle.FixedDialog;
 		MaximizeBox = false;
 		MinimumSize = new Size(620, 560);
