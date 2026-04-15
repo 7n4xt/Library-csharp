@@ -26,7 +26,10 @@ partial class AddEditBookForm
 	private TextBox etagereTextBox = null!;
 	private CheckBox availableCheckBox = null!;
 	private Label coverPathLabel = null!;
+	private FlowLayoutPanel coverPathPanel = null!;
 	private TextBox coverPathTextBox = null!;
+	private Button browseCoverButton = null!;
+	private PictureBox coverPreviewBox = null!;
 	private FlowLayoutPanel buttonPanel = null!;
 	private Button saveButton = null!;
 	private Button cancelButton = null!;
@@ -66,11 +69,16 @@ partial class AddEditBookForm
 		etagereTextBox = new TextBox();
 		availableCheckBox = new CheckBox();
 		coverPathLabel = new Label();
+		coverPathPanel = new FlowLayoutPanel();
 		coverPathTextBox = new TextBox();
+		browseCoverButton = new Button();
+		coverPreviewBox = new PictureBox();
 		buttonPanel = new FlowLayoutPanel();
 		saveButton = new Button();
 		cancelButton = new Button();
 		mainLayout.SuspendLayout();
+		coverPathPanel.SuspendLayout();
+		((System.ComponentModel.ISupportInitialize)coverPreviewBox).BeginInit();
 		yearPanel.SuspendLayout();
 		((System.ComponentModel.ISupportInitialize)yearNumericUpDown).BeginInit();
 		buttonPanel.SuspendLayout();
@@ -101,12 +109,13 @@ partial class AddEditBookForm
 		mainLayout.Controls.Add(etagereTextBox, 1, 10);
 		mainLayout.Controls.Add(availableCheckBox, 1, 11);
 		mainLayout.Controls.Add(coverPathLabel, 0, 12);
-		mainLayout.Controls.Add(coverPathTextBox, 1, 12);
-		mainLayout.Controls.Add(buttonPanel, 1, 13);
+		mainLayout.Controls.Add(coverPathPanel, 1, 12);
+		mainLayout.Controls.Add(coverPreviewBox, 1, 13);
+		mainLayout.Controls.Add(buttonPanel, 1, 14);
 		mainLayout.Dock = DockStyle.Fill;
 		mainLayout.Location = new Point(0, 0);
 		mainLayout.Name = "mainLayout";
-		mainLayout.RowCount = 14;
+		mainLayout.RowCount = 15;
 		mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 34F));
 		mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
 		mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 34F));
@@ -120,8 +129,9 @@ partial class AddEditBookForm
 		mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 34F));
 		mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 34F));
 		mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 34F));
+		mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 104F));
 		mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 48F));
-		mainLayout.Size = new Size(620, 500);
+		mainLayout.Size = new Size(620, 524);
 		mainLayout.TabIndex = 0;
 		// 
 		// titleLabel
@@ -346,12 +356,46 @@ partial class AddEditBookForm
 		// 
 		// coverPathTextBox
 		// 
-		coverPathTextBox.Dock = DockStyle.Fill;
-		coverPathTextBox.Location = new Point(123, 331);
-		coverPathTextBox.Margin = new Padding(3, 6, 12, 6);
+		// coverPathPanel
+		coverPathPanel.Controls.Add(coverPathTextBox);
+		coverPathPanel.Controls.Add(browseCoverButton);
+		coverPathPanel.Dock = DockStyle.Fill;
+		coverPathPanel.Location = new Point(123, 329);
+		coverPathPanel.Margin = new Padding(3, 4, 12, 4);
+		coverPathPanel.Name = "coverPathPanel";
+		coverPathPanel.Size = new Size(485, 26);
+		coverPathPanel.TabIndex = 20;
+		// 
+		// coverPathTextBox
+		// 
+		coverPathTextBox.Location = new Point(0, 0);
+		coverPathTextBox.Margin = new Padding(0);
 		coverPathTextBox.Name = "coverPathTextBox";
-		coverPathTextBox.Size = new Size(485, 23);
-		coverPathTextBox.TabIndex = 20;
+		coverPathTextBox.Size = new Size(390, 23);
+		coverPathTextBox.TabIndex = 0;
+		coverPathTextBox.TextChanged += coverPathTextBox_TextChanged;
+		// 
+		// browseCoverButton
+		// 
+		browseCoverButton.Location = new Point(398, 0);
+		browseCoverButton.Margin = new Padding(8, 0, 0, 0);
+		browseCoverButton.Name = "browseCoverButton";
+		browseCoverButton.Size = new Size(80, 23);
+		browseCoverButton.TabIndex = 1;
+		browseCoverButton.Text = "Browse";
+		browseCoverButton.UseVisualStyleBackColor = true;
+		browseCoverButton.Click += browseCoverButton_Click;
+		// 
+		// coverPreviewBox
+		// 
+		coverPreviewBox.BorderStyle = BorderStyle.FixedSingle;
+		coverPreviewBox.Location = new Point(123, 363);
+		coverPreviewBox.Margin = new Padding(3, 4, 12, 4);
+		coverPreviewBox.Name = "coverPreviewBox";
+		coverPreviewBox.Size = new Size(96, 96);
+		coverPreviewBox.SizeMode = PictureBoxSizeMode.Zoom;
+		coverPreviewBox.TabIndex = 21;
+		coverPreviewBox.TabStop = false;
 		// 
 		// buttonPanel
 		// 
@@ -359,11 +403,11 @@ partial class AddEditBookForm
 		buttonPanel.Controls.Add(cancelButton);
 		buttonPanel.Dock = DockStyle.Fill;
 		buttonPanel.FlowDirection = FlowDirection.RightToLeft;
-		buttonPanel.Location = new Point(123, 365);
+		buttonPanel.Location = new Point(123, 467);
 		buttonPanel.Name = "buttonPanel";
 		buttonPanel.Padding = new Padding(0, 10, 0, 0);
-		buttonPanel.Size = new Size(485, 132);
-		buttonPanel.TabIndex = 21;
+		buttonPanel.Size = new Size(485, 54);
+		buttonPanel.TabIndex = 22;
 		// 
 		// saveButton
 		// 
@@ -390,17 +434,20 @@ partial class AddEditBookForm
 		AutoScaleDimensions = new SizeF(7F, 15F);
 		AutoScaleMode = AutoScaleMode.Font;
 		BackColor = SystemColors.Control;
-		ClientSize = new Size(620, 500);
+		ClientSize = new Size(620, 524);
 		Controls.Add(mainLayout);
 		Font = new Font("Segoe UI", 9F);
 		FormBorderStyle = FormBorderStyle.FixedDialog;
 		MaximizeBox = false;
-		MinimumSize = new Size(620, 500);
+		MinimumSize = new Size(620, 560);
 		Name = "AddEditBookForm";
 		StartPosition = FormStartPosition.CenterParent;
 		Text = "Add Book";
 		mainLayout.ResumeLayout(false);
 		mainLayout.PerformLayout();
+		coverPathPanel.ResumeLayout(false);
+		coverPathPanel.PerformLayout();
+		((System.ComponentModel.ISupportInitialize)coverPreviewBox).EndInit();
 		yearPanel.ResumeLayout(false);
 		yearPanel.PerformLayout();
 		((System.ComponentModel.ISupportInitialize)yearNumericUpDown).EndInit();

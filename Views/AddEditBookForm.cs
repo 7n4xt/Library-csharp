@@ -1,5 +1,6 @@
 using LibraryManagement.Models;
 using LibraryManagement.Services;
+using System.IO;
 
 namespace LibraryManagement.Views;
 
@@ -52,6 +53,7 @@ public partial class AddEditBookForm : Form
 		etagereTextBox.Text = book.Etagere ?? string.Empty;
 		availableCheckBox.Checked = book.Dispo;
 		coverPathTextBox.Text = book.CoverPath ?? string.Empty;
+		RefreshCoverPreview();
 	}
 
 	private void yearCheckBox_CheckedChanged(object? sender, EventArgs e)
@@ -67,6 +69,8 @@ public partial class AddEditBookForm : Form
 			return;
 		}
 
+		string? persistedCoverPath = PersistCoverPath(coverPathTextBox.Text);
+
 		BookData = new Book
 		{
 			Id = BookData.Id,
@@ -78,7 +82,7 @@ public partial class AddEditBookForm : Form
 			Rayon = string.IsNullOrWhiteSpace(rayonTextBox.Text) ? null : rayonTextBox.Text.Trim(),
 			Etagere = string.IsNullOrWhiteSpace(etagereTextBox.Text) ? null : etagereTextBox.Text.Trim(),
 			Dispo = availableCheckBox.Checked,
-			CoverPath = string.IsNullOrWhiteSpace(coverPathTextBox.Text) ? null : coverPathTextBox.Text.Trim()
+			CoverPath = persistedCoverPath
 		};
 
 		DialogResult = DialogResult.OK;
@@ -178,5 +182,109 @@ public partial class AddEditBookForm : Form
 	private static string GetError(ValidationResult validation, string key)
 	{
 		return validation.Errors.TryGetValue(key, out string? message) ? message : string.Empty;
+	}
+
+	private void browseCoverButton_Click(object? sender, EventArgs e)
+	{
+		using var fileDialog = new OpenFileDialog
+		{
+			Title = "Select cover image",
+			Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.bmp;*.webp|All Files|*.*",
+			CheckFileExists = true,
+			Multiselect = false
+		};
+
+		if (fileDialog.ShowDialog(this) != DialogResult.OK)
+		{
+			return;
+		}
+
+		coverPathTextBox.Text = fileDialog.FileName;
+		RefreshCoverPreview();
+	}
+
+	private void coverPathTextBox_TextChanged(object? sender, EventArgs e)
+	{
+		RefreshCoverPreview();
+	}
+
+	private void RefreshCoverPreview()
+	{
+		string path = coverPathTextBox.Text.Trim();
+		if (string.IsNullOrWhiteSpace(path))
+		{
+			SetCoverPreviewImage(null);
+			return;
+		}
+
+		string absolutePath = ResolveCoverAbsolutePath(path);
+		if (!File.Exists(absolutePath))
+		{
+			SetCoverPreviewImage(null);
+			return;
+		}
+
+		try
+		{
+			using var stream = new FileStream(absolutePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+			using var sourceImage = Image.FromStream(stream);
+			SetCoverPreviewImage(new Bitmap(sourceImage));
+		}
+		catch
+		{
+			SetCoverPreviewImage(null);
+		}
+	}
+
+	private string? PersistCoverPath(string rawPath)
+	{
+		string trimmedPath = rawPath.Trim();
+		if (string.IsNullOrWhiteSpace(trimmedPath))
+		{
+			return null;
+		}
+
+		if (!Path.IsPathRooted(trimmedPath) && trimmedPath.Replace('\\', '/').StartsWith("Resources/Covers/", StringComparison.OrdinalIgnoreCase))
+		{
+			return trimmedPath.Replace('\\', '/');
+		}
+
+		string sourcePath = ResolveCoverAbsolutePath(trimmedPath);
+		if (!File.Exists(sourcePath))
+		{
+			return trimmedPath;
+		}
+
+		string coversDirectory = Path.Combine(AppContext.BaseDirectory, "Resources", "Covers");
+		Directory.CreateDirectory(coversDirectory);
+
+		string extension = Path.GetExtension(sourcePath);
+		if (string.IsNullOrWhiteSpace(extension))
+		{
+			extension = ".img";
+		}
+
+		string destinationFileName = $"cover_{DateTime.Now:yyyyMMdd_HHmmss_fff}{extension.ToLowerInvariant()}";
+		string destinationPath = Path.Combine(coversDirectory, destinationFileName);
+		File.Copy(sourcePath, destinationPath, true);
+
+		return Path.Combine("Resources", "Covers", destinationFileName).Replace('\\', '/');
+	}
+
+	private static string ResolveCoverAbsolutePath(string path)
+	{
+		if (Path.IsPathRooted(path))
+		{
+			return path;
+		}
+
+		return Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, path));
+	}
+
+	private void SetCoverPreviewImage(Image? image)
+	{
+		Image? previous = coverPreviewBox.Image;
+		coverPreviewBox.Image = image;
+		previous?.Dispose();
 	}
 }
